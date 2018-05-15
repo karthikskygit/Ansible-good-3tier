@@ -1,2 +1,26 @@
 ---
 # tasks file for database
+
+- name: Install Postgress server
+  yum:
+    name: postgresql-server
+    state: latest
+
+- name: Check if postgressql is installed
+  with_items: "{{ postgres_data_dir }}"
+  stat: 
+    path: "{{ postgres_data_dir }}/PG_VERSION"
+  register: postgres_version
+- debug: var=item.stat.exists
+  loop: "{{ postgres_version.results }}"
+
+- name: Initialising Postgress Database
+  command: postgresql-setup initdb
+  when: not item.stat.exists
+  loop: "{{ postgres_version.results }}"
+
+- name: Start Postgress
+  service:
+    name: postgresql.service
+    state: started  
+    enabled: yes

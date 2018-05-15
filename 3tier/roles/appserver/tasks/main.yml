@@ -1,2 +1,23 @@
 ---
 # tasks file for appserver
+
+- name: Install Tomcat
+  yum:
+   name: tomcat
+   state: latest
+- name: create tomact directory
+  file:
+   path: "{{ doc_root_path }}"
+   state: directory
+
+- name: Copy Index.html file from index.html.j2
+  template:
+     src: index.html.j2
+     dest: "{{ doc_root_path }}/index.html"
+     mode: 0644
+- name: Start tomcat
+  service: 
+     name: tomcat
+     state: started
+     enabled: yes
+   

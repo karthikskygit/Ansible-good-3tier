@@ -1,0 +1,18 @@
+---
+- name: Installing tomcat in appservers
+  hosts: apps
+  roles:
+   - base-conf
+   - appserver
+
+- name: Installing HAproxy in the frontenf server
+  hosts: frontends
+  roles:
+   - base-conf
+   - haproxy
+
+- name: Installing and configuring Postgress Sql
+  hosts: appdbs
+  roles:
+   - base-conf
+   - database

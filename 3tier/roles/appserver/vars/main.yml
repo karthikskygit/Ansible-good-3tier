@@ -1,2 +1,4 @@
 ---
 # vars file for appserver
+
+doc_root_path: /usr/share/tomcat/webapps/ROOT

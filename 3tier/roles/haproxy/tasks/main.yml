@@ -1,25 +1,23 @@
 ---
 # tasks file for haproxy
 
-- name: deploy haproxy
-  hosts: frontends
-  gather_facts: false # remove later! speeds up testing
-  become: true
+- name: install HAProxy
+  yum:
+   name: haproxy 
+   state: latest
 
-  tasks:
-  - name: http
-    package:
-      name: httpie
-      state: latest
-  - name: install HAProxy
-    yum:
-      name: haproxy 
-      state: latest
-  - name: configure haproxy
-    template:
-      src: haproxy.cfg.j2
-      dest: /etc/haproxy/haproxy.cfg
-  - name: enable HAProxy
-    service:
-      name: haproxy
-      state: started
+- name: enable HAProxy
+  service:
+    name: haproxy
+    state: started
+
+- name: configure haproxy
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: 0644
+
+- name: Start haproxy
+  service: 
+    name: haproxy
+    state: restarted

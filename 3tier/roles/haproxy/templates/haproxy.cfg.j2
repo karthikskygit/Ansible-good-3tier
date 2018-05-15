@@ -3,8 +3,8 @@ global
   log /dev/log  local1 notice
   stats socket /var/lib/haproxy/stats level admin
   chroot /var/lib/haproxy
-  user "{{ huser }}"
-  group "{{ hgroup }}"
+  user haproxy
+  group haproxy
   daemon
 
 defaults
@@ -24,7 +24,7 @@ frontend hafrontend
 backend app-servers
     mode http
     balance roundrobin
-    option forwardfor 
-    {% for hosts in groups['apps'] %}
-    server app(loop.index) {{ hosts }}:8080 cookie app1 check
-    {% end for %}
+    option forwardfor
+{% for host in groups['apps'] %}
+    server app{{loop.index}} {{hostvars[host]['inventory_hostname']}}:8080 cookie app{{loop.index}} check
+{% endfor %}
